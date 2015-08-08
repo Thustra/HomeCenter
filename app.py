@@ -8,7 +8,7 @@ import sqlite3
 
 app = Flask(__name__)
 app.secret_key = 'random thing'
-app.database = "sample.db"
+app.database = "sa mple.db"
 
 # routes
 
@@ -25,12 +25,16 @@ def login_required(f):
 @app.route('/')
 @login_required
 def home():
-    # g is temporary object
-    g.db = connect_db()
-    cur = g.db.execute('select * from posts')
-    # cur.fetchall() --> list of tuples which we then cast to a list of dicts
-    posts = [dict(title=row[0], description=row[1]) for row in cur.fetchall()]
-    g.db.close()
+    posts = []
+    try:
+        # g is temporary object
+        g.db = connect_db()
+        cur = g.db.execute('select * from posts')
+        # cur.fetchall() --> list of tuples which we then cast to a list of dicts
+        posts = [dict(title=row[0], description=row[1]) for row in cur.fetchall()]
+        g.db.close()
+    except sqlite3.OperationalError:
+        flash("You have no database")
     return render_template('index.html', posts=posts)
 
 @app.route('/welcome')
