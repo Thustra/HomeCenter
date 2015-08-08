@@ -1,0 +1,1 @@
+web: waitress-serve-script.py app:app
