@@ -1,1 +1,1 @@
-web: waitress-serve-script.py app:app
+web: python server.py
