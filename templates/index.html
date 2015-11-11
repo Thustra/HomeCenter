@@ -4,9 +4,9 @@
         <h1>Welcome to Flask!</h1>
         <br>
 
-        {% for post in posts %}
-            <strong>Title: </strong>{{ post.title }}<br>
-            <strong>Post: </strong>{{ post.description }}<br>
+        {% for show in shows %}
+            <strong>Title: </strong>{{ show.title }}<br>
+            <strong>Finished: </strong>{{ show.finished }}<br>
         <br>
         {% endfor %}
 

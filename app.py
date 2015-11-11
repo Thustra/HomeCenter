@@ -1,14 +1,25 @@
 __author__ = 'Peter'
 
-from flask import Flask,render_template, redirect, request, url_for,session, flash, g
+from flask import Flask,render_template, redirect, request, url_for,session, flash
+from flask.ext.sqlalchemy import SQLAlchemy
 from functools import wraps
-import sqlite3
+#import sqlite3
 
 # Configuration variables
 
 app = Flask(__name__)
-app.secret_key = 'random thing'
-app.database = "sa mple.db"
+
+# Config
+import os
+app.config.from_object(os.environ['APP_SETTINGS'])
+print(os.environ['APP_SETTINGS'])
+
+
+# create the sqlalchemy object
+
+db = SQLAlchemy(app)
+
+from models import *
 
 # routes
 
@@ -25,17 +36,19 @@ def login_required(f):
 @app.route('/')
 @login_required
 def home():
-    posts = []
-    try:
+    #shows = []
+    #try:
         # g is temporary object
-        g.db = connect_db()
-        cur = g.db.execute('select * from posts')
+    #    g.db = connect_db()
+    #    cur = g.db.execute('select * from shows')
         # cur.fetchall() --> list of tuples which we then cast to a list of dicts
-        posts = [dict(title=row[0], description=row[1]) for row in cur.fetchall()]
-        g.db.close()
-    except sqlite3.OperationalError:
-        flash("You have no database")
-    return render_template('index.html', posts=posts)
+    #    shows = [dict(title=row[1], finished=row[2]) for row in cur.fetchall()]
+    #    g.db.close()
+    #except sqlite3.OperationalError:
+    #    flash("You have no database")
+
+    shows = db.session.query(Show).all()
+    return render_template('index.html', shows=shows)
 
 @app.route('/welcome')
 def welcome():
@@ -60,9 +73,9 @@ def logout():
     flash('You were just logged out.')
     return redirect(url_for('welcome'))
 
-def connect_db():
-    return sqlite3.connect(app.database)
+#def connect_db():
+#    return sqlite3.connect('shows.db')
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
