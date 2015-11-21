@@ -1,28 +1,18 @@
 __author__ = 'Peter'
 
-from flask import Flask,render_template, redirect, url_for,session, flash
-from flask.ext.sqlalchemy import SQLAlchemy
+from project import app,db
+from project.models import *
+from flask import flash,redirect,session,url_for,render_template,Blueprint
 from functools import wraps
-#import sqlite3
-
-# Configuration variables
-
-app = Flask(__name__)
 
 ##########
 # Config #
 ##########
 
-import os
-app.config.from_object(os.environ['APP_SETTINGS'])
-db = SQLAlchemy(app)
-
-from models import *
-from project.users.views import users_blueprint
-
-# Register the blueprints
-
-app.register_blueprint(users_blueprint)
+home_blueprint = Blueprint(
+    'home', __name__,
+    template_folder='templates'
+)
 
 ####################
 # helper functions #
@@ -42,20 +32,13 @@ def login_required(f):
 # Routes #
 ##########
 
-@app.route('/')
+@home_blueprint.route('/')
 @login_required
 def home():
     shows = db.session.query(Show).all()
     files = db.session.query(Download).all()
     return render_template('index.html', shows=shows, downloads=files)
 
-@app.route('/welcome')
+@home_blueprint.route('/welcome')
 def welcome():
     return render_template('welcome.html')
-
-##############
-# Run Server #
-##############
-
-if __name__ == '__main__':
-    app.run()

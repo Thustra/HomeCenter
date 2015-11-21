@@ -1,6 +1,6 @@
 __author__ = 'Peter'
 
-from app import app
+from project import app
 import unittest
 
 class FlaskTestCase(unittest.TestCase):

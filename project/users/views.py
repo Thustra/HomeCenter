@@ -3,9 +3,6 @@
 ###########
 
 from flask import flash, redirect, render_template, request, session, url_for, Blueprint
-from app import app
-from flask.ext.bcrypt import Bcrypt
-bcrypt = Bcrypt(app)
 from functools import wraps
 
 ##########
@@ -44,7 +41,7 @@ def login():
         else:
             session['logged_in'] = True
             flash('You were just logged in.')
-            return redirect(url_for('home'))
+            return redirect(url_for('home.home'))
     return render_template('login.html', error=error)
 
 @users_blueprint.route('/logout')
@@ -52,4 +49,4 @@ def login():
 def logout():
     session.pop('logged_in', None)
     flash('You were just logged out.')
-    return redirect(url_for('welcome'))
+    return redirect(url_for('home.welcome'))

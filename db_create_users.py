@@ -1,7 +1,7 @@
 __author__ = 'Peter'
 
-from app import db
-from models import User
+from project import db
+from project.models import User
 
 #insert data
 

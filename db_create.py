@@ -1,8 +1,8 @@
 __author__ = 'Peter'
 
 
-from app import db
-from models import Show
+from project import db
+from project.models import Show
 
 # create database and db tables
 
