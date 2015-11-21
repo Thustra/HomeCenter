@@ -10,6 +10,13 @@
         <br>
         {% endfor %}
 
+        {% for download in downloads %}
+            <strong>Filename: </strong>{{ download.filename }}<br>
+            <strong>Size: </strong>{{ download.size }}<br>
+            <strong>Show: </strong>{{ download.show.title }}<br>
+        <br>
+        {% endfor %}
+
         <p>Click <a href="/logout">here</a> to logout.</p>
 
 {% endblock %}

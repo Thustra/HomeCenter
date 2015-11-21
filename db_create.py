@@ -12,6 +12,8 @@ db.create_all()
 
 db.session.add(Show("Firefly", True))
 db.session.add(Show("Gotham", False))
+db.session.add(Show("The Big Bang Theory", False))
+db.session.add(Show("Glee", True))
 
 
 # commit changes
