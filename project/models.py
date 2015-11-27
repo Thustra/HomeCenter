@@ -1,10 +1,11 @@
 __author__ = 'Peter'
 
-from project import db
-from project import bcrypt
+from project import db # pragma: no cover
+from project import bcrypt # pragma: no cover
 
-from sqlalchemy import ForeignKey
-from sqlalchemy.orm import relationship
+from sqlalchemy import ForeignKey # pragma: no cover
+from sqlalchemy.orm import relationship # pragma: no cover
+
 
 class Show(db.Model):
 
@@ -24,24 +25,26 @@ class Show(db.Model):
     def __repr__(self):
         return '<title {}'.format(self.title)
 
+
 class Download(db.Model):
 
     __tablename__ = "downloads"
 
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     filename = db.Column(db.String, nullable=False)
-    size = db.Column(db.Integer, nullable=False)
+    size = db.Column(db.BigInteger, nullable=False)
     location = db.Column(db.String, nullable=False)
     season = db.Column(db.Integer, nullable=False)
     download_timestamp = db.Column(db.DateTime, nullable=False)
 
     show_id = db.Column(db.Integer, ForeignKey("shows.id"))
 
-    def __init__(self,filename,size,location,timestamp):
+    def __init__(self,filename,size,location,timestamp,season):
         self.filename = filename
         self.size = size
         self.location = location
         self.download_timestamp = timestamp
+        self.season = season
 
     def __repr__(self):
         return '<File {}'.format(self.filename)
@@ -56,7 +59,22 @@ class User(db.Model):
 
     def __init__(self,name,password):
         self.name = name
-        self.password = bcrypt.generate_password_hash(password)
+        self.password = bcrypt.generate_password_hash(password).decode()
 
     def __repr__(self):
         return 'User {}'.format(self.name)
+
+    @property
+    def is_authenticated(self):
+        return True
+
+    @property
+    def is_active(self):
+        return True
+
+    @property
+    def is_anonymous(self):
+        return False
+
+    def get_id(self):
+        return self.id

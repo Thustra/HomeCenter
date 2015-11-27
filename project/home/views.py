@@ -1,9 +1,11 @@
 __author__ = 'Peter'
 
-from project import app,db
-from project.models import *
-from flask import flash,redirect,session,url_for,render_template,Blueprint
-from functools import wraps
+from project.models import * # pragma: no cover
+from flask import render_template,Blueprint,flash,redirect,url_for,request # pragma: no cover
+from flask.ext.login import login_required # pragma: no cover
+from project.home.form import AddSeriesForm # pragma: no cover
+from project import db # pragma: no cover
+
 
 ##########
 # Config #
@@ -12,21 +14,7 @@ from functools import wraps
 home_blueprint = Blueprint(
     'home', __name__,
     template_folder='templates'
-)
-
-####################
-# helper functions #
-####################
-
-def login_required(f):
-    @wraps(f)
-    def wrap(*args, **kwargs):
-        if 'logged_in' in session:
-            return f(*args, **kwargs)
-        else:
-            flash('You need to login first.')
-            return redirect(url_for('users.login'))
-    return wrap
+) # pragma: no cover
 
 ##########
 # Routes #
@@ -42,3 +30,19 @@ def home():
 @home_blueprint.route('/welcome')
 def welcome():
     return render_template('welcome.html')
+
+@home_blueprint.route('/add', methods=['GET','POST'])
+@login_required
+def add():
+    form = AddSeriesForm(request.form)
+    if form.validate_on_submit():
+        show = Show(
+            title=form.title.data,
+            watching=form.watching.data,
+            finished=form.finished.data
+        )
+        db.session.add(show)
+        db.session.commit()
+        flash("Successfully added!")
+        return redirect(url_for('home.home'))
+    return render_template('add.html', form=form)
