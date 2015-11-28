@@ -4,19 +4,35 @@
         <h1>Welcome to Flask!</h1>
         <br>
 
+        <div class="jumbotron">
+        <div class="row">
+            <div class="col-xs-6">
+                <strong>Title</strong>
+            </div>
+            <div class="col-xs-3">
+                <strong>Watching</strong>
+            </div>
+            <div class="col-xs-3">
+                <strong>Finished</strong>
+            </div>
+        </div>
         {% for show in shows %}
-            <strong>Title: </strong>{{ show.title }}<br>
-            <strong>Finished: </strong>{{ show.finished }}<br>
-        <br>
+            <div class="row">
+                <div class="col-xs-6">
+                  {{ show.title }}
+                </div>
+                <div class="col-xs-3">
+                   {{ show.watching }}
+                </div>
+                <div class="col-xs-3">
+                   {{ show.finished }}
+                </div>
+            </div>
         {% endfor %}
+        </div>
 
-        {% for download in downloads %}
-            <strong>Filename: </strong>{{ download.filename }}<br>
-            <strong>Size: </strong>{{ download.size }}<br>
-            <strong>Show: </strong>{{ download.show.title }}<br>
-        <br>
-        {% endfor %}
+            <p>Click <a href="/logout">here</a> to logout.</p>
 
-        <p>Click <a href="/logout">here</a> to logout.</p>
+
 
 {% endblock %}

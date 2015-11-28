@@ -4,11 +4,16 @@
         <meta charset="UTF-8">
         <title>Flask Intro</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link href="static/bootstrap.min.css" rel="stylesheet" media="screen">
+        <link href="/static/bootstrap.min.css" rel="stylesheet" media="screen">
     </head>
     <body>
         <div class="container">
-        <!-- child template -->
+        <!-- nav bar -->
+
+        <!-- messages -->
+        {% for message in get_flashed_messages() %}
+            {{ message }}
+        {% endfor %}
 
         {% block content %}{% endblock %}
 
@@ -17,10 +22,9 @@
             <p class="error"><strong>Error:</strong> {{ error }}
         {% endif %}
 
-        <!-- messages -->
-        {% for message in get_flashed_messages() %}
-            {{ message }}
-        {% endfor %}
+
         </div>
     </body>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="/static/bootstrap.min.js"></script>
 </html>
