@@ -5,32 +5,49 @@
         <br>
 
         <div class="jumbotron">
-        <div class="row">
-            <div class="col-xs-6">
-                <strong>Title</strong>
-            </div>
-            <div class="col-xs-3">
-                <strong>Watching</strong>
-            </div>
-            <div class="col-xs-3">
-                <strong>Finished</strong>
+        <div class="panel panel-default">
+            <div class="panel-heading">stuff</div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-xs-6">
+                        <strong>Title</strong>
+                    </div>
+                    <div class="col-xs-2">
+                        <strong>Watching</strong>
+                    </div>
+                    <div class="col-xs-2">
+                        <strong>Finished</strong>
+                    </div>
+                </div>
+                {% for show in shows %}
+                    <div class="row">
+                        <div class="col-xs-6">
+                          {{ show.title }}
+                        </div>
+                        <div class="col-xs-2">
+                            {% if show.watching %}
+                           <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
+                            {% else %}
+                            <span class="glyphicon glyphicon-unchecked" aria-hidden="true"></span>
+                            {% endif %}
+                        </div>
+                        <div class="col-xs-2">
+                           {% if show.finished %}
+                           <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
+                            {% else %}
+                            <span class="glyphicon glyphicon-unchecked" aria-hidden="true"></span>
+                            {% endif %}
+                        </div>
+                        <div class="col-xs-2">
+                            <a href="{{ url_for('home.edit',show=show.title) }}">
+                                <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+                </div>
             </div>
         </div>
-        {% for show in shows %}
-            <div class="row">
-                <div class="col-xs-6">
-                  {{ show.title }}
-                </div>
-                <div class="col-xs-3">
-                   {{ show.watching }}
-                </div>
-                <div class="col-xs-3">
-                   {{ show.finished }}
-                </div>
-            </div>
-        {% endfor %}
-        </div>
-
             <p>Click <a href="/logout">here</a> to logout.</p>
 
 

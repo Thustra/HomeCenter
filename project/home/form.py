@@ -17,3 +17,8 @@ class AddSeriesForm(Form):
     finished = BooleanField(
         'finished'
     )
+
+class EditSeriesForm(Form):
+    watching = BooleanField(
+        'watching'
+    )

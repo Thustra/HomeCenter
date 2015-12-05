@@ -7,8 +7,41 @@
         <link href="/static/bootstrap.min.css" rel="stylesheet" media="screen">
     </head>
     <body>
+        <!-- Nav bar -->
+        <nav class="navbar navbar-default" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="/">HomeCenter</a>
+                </div>
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav">
+                        <li><a href="/add">Add</a></li>
+                        <li><a href="#">Link 2</a></li>
+                    </ul>
+                    <ul class="nav navbar-right">
+                        <li>
+                            {% if not current_user.is_active %}
+                            <p class="navbar-btn">
+                                <a href="/login" class="btn btn-default">Login</a>
+                            </p>
+                            {% else %}
+                            <p class="navbar-text">
+                                Logged in as {{ current_user }}
+                            </p>
+                            {% endif %}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
         <div class="container">
-        <!-- nav bar -->
 
         <!-- messages -->
         {% for message in get_flashed_messages() %}
@@ -22,8 +55,8 @@
             <p class="error"><strong>Error:</strong> {{ error }}
         {% endif %}
 
-
         </div>
+
     </body>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="/static/bootstrap.min.js"></script>

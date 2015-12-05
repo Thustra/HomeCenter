@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Edit series</h1>
+<br>
+<form class="form-signin" role="form" method="post" action="">
+  {{ form.csrf_token }}
+  <p>
+    {{ show }}
+  </p>
+  <p>
+      {{ form.watching(class_="checkbox-inline",checked="checked") }} Watching
+  </p>
+  <p>
+      Finished or not finished
+  </p>
+
+  <button class="btn btn-sm btn-success" type="submit">Save</button>
+</form>
+
+{% endblock %}
