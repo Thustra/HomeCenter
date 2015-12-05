@@ -10,13 +10,14 @@
     {{ show }}
   </p>
   <p>
-      {{ form.watching(class_="checkbox-inline",checked="checked") }} Watching
+      {{ form.watching(class_="checkbox-inline") }} Watching
   </p>
   <p>
-      Finished or not finished
+      {{ form.finished(class_="checkbox-inline",disabled="disabled") }} Finished
   </p>
 
-  <button class="btn btn-sm btn-success" type="submit">Save</button>
+  <button class="btn btn-sm btn-success" type="submit" name="btn" value="save">Save</button>
+  <button class="btn btn-sm btn-danger" type="submit" name="btn" value="cancel">Cancel</button>
 </form>
 
 {% endblock %}

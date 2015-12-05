@@ -31,6 +31,12 @@ def home():
 def welcome():
     return render_template('welcome.html')
 
+@home_blueprint.route('/show/<title>', methods=['GET','POST'])
+@login_required
+def show(show):
+    current_show = Show.query.filter_by(title=show).first()
+    pass
+
 @home_blueprint.route('/add', methods=['GET','POST'])
 @login_required
 def add():
@@ -51,10 +57,16 @@ def add():
 @login_required
 def edit(show):
     form = EditSeriesForm(request.form)
+    show_to_edit = Show.query.filter_by(title=show).first()
+
     if form.validate_on_submit():
-        show_to_edit = Show.query.filter_by(title=show).first()
-        show_to_edit.watching = form.watching.data
-        db.session.commit()
-        flash("Successfully edited!")
-        return redirect(url_for('home.home'))
+        if request.form['btn'] == 'save':
+            show_to_edit.watching = form.watching.data
+            db.session.commit()
+            flash("Successfully edited!")
+            return redirect(url_for('home.home'))
+        else:
+            return redirect(url_for('home.home'))
+    form.watching.data = show_to_edit.watching
+    form.finished.data = show_to_edit.finished
     return render_template('edit.html', form=form, show=show)
