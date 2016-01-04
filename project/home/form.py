@@ -1,7 +1,7 @@
 __author__ = 'Peter'
 
 from flask_wtf import Form
-from wtforms import StringField,BooleanField
+from wtforms import StringField,BooleanField,RadioField
 from wtforms.validators import DataRequired
 
 class AddSeriesForm(Form):
@@ -24,4 +24,11 @@ class EditSeriesForm(Form):
     )
     finished = BooleanField(
         'finished'
+    )
+
+
+class AddTVmazeIDForm(Form):
+    selection = RadioField(
+        'selection',
+        choices=[('value','description'),('value_two','whatever')]
     )

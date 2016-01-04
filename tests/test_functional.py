@@ -141,7 +141,7 @@ class HomeViewsTests(BaseTestCase):
             )
         response = self.client.post(
                 '/add',
-                data=dict(title="Friends", watching=True, finished=False),
+                data=dict(title="Friends", watching=True, finished=False,tvmaze_id=100),
                 follow_redirects=True
             )
         self.assertEqual(response.status_code,200)

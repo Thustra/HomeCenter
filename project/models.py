@@ -15,12 +15,14 @@ class Show(db.Model):
     title = db.Column(db.String, unique=True, nullable=False)
     watching = db.Column(db.Boolean, nullable=True, default=False)
     finished = db.Column(db.Boolean, nullable=False, default=False)
+    tvmaze_id = db.Column(db.Integer, nullable=True, unique=True)
     downloads = relationship("Download", backref="show")
 
-    def __init__(self,title,watching,finished):
+    def __init__(self,title,watching,finished,tvmaze_id):
         self.title = title
         self.watching = watching
         self.finished = finished
+        self.tvmaze_id = tvmaze_id
 
     def __repr__(self):
         return '<title {}'.format(self.title)

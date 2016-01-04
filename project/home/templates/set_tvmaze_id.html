@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Add series</h1>
+<br>
+<form class="form-signin" role="form" method="post" action="">
+  {{ form.csrf_token }}
+    {% for subfield in form.selection %}
+    <p>
+    <tr>
+        <td>{{ subfield }}</td>
+        <td>{{ subfield.label }}</td>
+    </tr>
+    </p>
+    {% endfor %}
+
+  <button class="btn btn-sm btn-success" type="submit">Select</button>
+</form>
+
+{% endblock %}

@@ -15,7 +15,7 @@ class BaseTestCase(TestCase):
     def setUp(self):
         db.create_all()
         db.session.add(User("admin","admin"))
-        db.session.add(Show("Firefly",True,False))
+        db.session.add(Show("Firefly",True,False,180))
         db.session.add(Download("test.avi",123456,"C:\\test.avi",datetime.datetime.now(),1))
         db.session.commit()
 

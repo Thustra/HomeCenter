@@ -1,10 +1,15 @@
 __author__ = 'Peter'
 
 from project.models import * # pragma: no cover
-from flask import render_template,Blueprint,flash,redirect,url_for,request # pragma: no cover
-from flask.ext.login import login_required, current_user # pragma: no cover
-from project.home.form import AddSeriesForm, EditSeriesForm # pragma: no cover
+from flask import render_template,Blueprint,flash,redirect,url_for,request,session # pragma: no cover
+from flask_wtf import Form  # pragma: no cover
+from wtforms import RadioField,HiddenField  # pragma: no cover
+from wtforms.validators import DataRequired  # pragma: no cover
+from flask.ext.login import login_required # pragma: no cover
+from project.home.form import AddSeriesForm, EditSeriesForm, AddTVmazeIDForm # pragma: no cover
 from project import db # pragma: no cover
+import json, requests
+
 
 
 ##########
@@ -42,16 +47,57 @@ def show(show):
 def add():
     form = AddSeriesForm(request.form)
     if form.validate_on_submit():
-        show = Show(
-            title=form.title.data,
-            watching=form.watching.data,
-            finished=form.finished.data
-        )
-        db.session.add(show)
-        db.session.commit()
-        flash("Successfully added!")
-        return redirect(url_for('home.home'))
+        session['title'] = form.title.data
+        session['watching'] = form.watching.data
+        session['finished'] = form.finished.data
+
+        return redirect(url_for('home.set_tvmaze_id'))
     return render_template('add.html', form=form)
+
+@login_required
+@home_blueprint.route('/set_tvmaze_id', methods=['GET', 'POST'])
+def set_tvmaze_id():
+
+    class F(Form):
+        pass
+
+    response=requests.get("http://api.tvmaze.com/search/shows?q="+session['title'])
+    print(response)
+    json_data=json.loads(response.text)
+    options = []
+    for item in json_data:
+        options.append(
+            (
+                str(item['show']['id']),
+                item['show']['name']
+             )
+        )
+
+    print(options)
+
+    F.selection = RadioField(
+        'selection',
+        choices=options,
+        validators=[
+            DataRequired()
+        ]
+    )
+
+    form = F(request.form)
+
+    if form.validate_on_submit():
+        print(form.selection.data)
+        show = Show(
+            title=session['title'],
+            watching=session['watching'],
+            finished=session['finished'],
+            tvmaze_id = form.selection.data
+        )
+        #db.session.add(show)
+        #db.session.commit()
+        return redirect(url_for('home.home'))
+    return render_template('set_tvmaze_id.html', form=form)
+
 
 @home_blueprint.route('/edit/<show>', methods=['GET','POST'])
 @login_required
