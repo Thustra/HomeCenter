@@ -4,15 +4,32 @@
 
 <h1>Add series</h1>
 <br>
+    <span class="error">
+      {% if form.selection.errors %}
+        {% for error in form.selection.errors %}
+          {{ error }}
+        {% endfor %}
+      {% endif %}
+    </span>
 <form class="form-signin" role="form" method="post" action="">
   {{ form.csrf_token }}
     {% for subfield in form.selection %}
-    <p>
-    <tr>
-        <td>{{ subfield }}</td>
-        <td>{{ subfield.label }}</td>
-    </tr>
-    </p>
+        <div class="row">
+            <div class="col-xs-7">
+                <div class="row">
+                    <div class="radio">
+                        {{ subfield }}
+                        {{ subfield.label }} ({{ subfield.extra_data[0] }})
+                    </div>
+                </div>
+                <div class="row">
+                    {{ subfield.extra_data[1] }}
+                </div>
+            </div>
+            <div class="col-xs-5">
+                <img class="img-responsive" src={{ subfield.extra_data[2] }}>
+            </div>
+        </div>
     {% endfor %}
 
   <button class="btn btn-sm btn-success" type="submit">Select</button>

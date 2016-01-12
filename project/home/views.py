@@ -6,9 +6,10 @@ from flask_wtf import Form  # pragma: no cover
 from wtforms import RadioField,HiddenField  # pragma: no cover
 from wtforms.validators import DataRequired  # pragma: no cover
 from flask.ext.login import login_required # pragma: no cover
-from project.home.form import AddSeriesForm, EditSeriesForm, AddTVmazeIDForm # pragma: no cover
+from project.home.form import AddSeriesForm, EditSeriesForm # pragma: no cover
 from project import db # pragma: no cover
 import json, requests
+from html.parser import HTMLParser
 
 
 
@@ -61,32 +62,90 @@ def set_tvmaze_id():
     class F(Form):
         pass
 
+    class MLStripper(HTMLParser):
+        def __init__(self):
+            super(MLStripper,self).__init__()
+            self.reset()
+            self.fed = []
+        def handle_data(self, d):
+            self.fed.append(d)
+        def get_data(self):
+            return ''.join(self.fed)
+
+    def strip_tags(html):
+        s = MLStripper()
+        s.feed(html)
+        return s.get_data()
+
     response=requests.get("http://api.tvmaze.com/search/shows?q="+session['title'])
     print(response)
     json_data=json.loads(response.text)
     options = []
+
+    #
+    # TODO: Add check for certain json parts not existing
+    #
+
     for item in json_data:
         options.append(
             (
                 str(item['show']['id']),
-                item['show']['name']
-             )
+                item['show']['name'],
+                (
+                    item['show']['network']['name'] if item['show']['network'] else item['show']['webChannel']['name'],
+                    strip_tags(item['show']['summary']),
+                    item['show']['image']['medium'])
+            )
         )
 
-    print(options)
 
-    F.selection = RadioField(
-        'selection',
+
+
+    class FancyRadioField(RadioField):
+        def __init__(self, **kwds):
+            super(FancyRadioField,self).__init__(**kwds)
+
+        def iter_choices(self):
+            for value, label, extra_data in self.choices:
+                yield (value, label, extra_data, self.coerce(value) == self.data)
+
+        def __iter__(self):
+            opts = dict(widget=self.option_widget, _name=self.name, _form=None, _meta=self.meta)
+            for i, (value, label,extra_data, checked) in enumerate(self.iter_choices()):
+                opt = self._Option(label=label, id='%s-%d' % (self.id, i), **opts)
+                opt.process(None, value)
+                opt.checked = checked
+                opt.extra_data=extra_data
+                yield opt
+
+        def validate(self, form, extra_validators=tuple()):
+            print('validating')
+            return super(FancyRadioField,self).validate(form, extra_validators)
+            print('done validating')
+
+        def pre_validate(self, form):
+            for v, _, extra_data in self.choices:
+                if self.data == v:
+                    print("valid choice:" + str(self.data))
+                    break
+            else:
+                raise ValueError(self.gettext('Not a valid choice'))
+
+
+    F.selection = FancyRadioField(
+        label='selection',
         choices=options,
-        validators=[
-            DataRequired()
-        ]
-    )
+        validators=[DataRequired()]
+       )
+
 
     form = F(request.form)
 
+    #
+    # TODO: Add a check to see if this series is already in the DB
+    #
+
     if form.validate_on_submit():
-        print(form.selection.data)
         show = Show(
             title=session['title'],
             watching=session['watching'],

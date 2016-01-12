@@ -25,10 +25,3 @@ class EditSeriesForm(Form):
     finished = BooleanField(
         'finished'
     )
-
-
-class AddTVmazeIDForm(Form):
-    selection = RadioField(
-        'selection',
-        choices=[('value','description'),('value_two','whatever')]
-    )
