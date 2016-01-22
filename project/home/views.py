@@ -138,6 +138,10 @@ def set_tvmaze_id():
         validators=[DataRequired()]
        )
 
+    F.title = HiddenField(
+        label='title'
+    )
+
 
     form = F(request.form)
 
@@ -145,13 +149,20 @@ def set_tvmaze_id():
     # TODO: Add a check to see if this series is already in the DB
     #
 
+    #print(options)
+
     if form.validate_on_submit():
+        print("In the if statement")
+        print(form.data.items())
         show = Show(
-            title=session['title'],
+            title=form.title.data,
             watching=session['watching'],
             finished=session['finished'],
             tvmaze_id = form.selection.data
         )
+        test = db.session.query(Show).filter(Show.title == show.title).first()
+        print("Show title: " + show.title)
+        print(test)
         #db.session.add(show)
         #db.session.commit()
         return redirect(url_for('home.home'))

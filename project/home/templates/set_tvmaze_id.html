@@ -13,6 +13,7 @@
     </span>
 <form class="form-signin" role="form" method="post" action="">
   {{ form.csrf_token }}
+    {{ form.title }}
     {% for subfield in form.selection %}
         <div class="row">
             <div class="col-xs-7">
