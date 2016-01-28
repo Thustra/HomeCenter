@@ -43,6 +43,7 @@ def show(show):
     current_show = Show.query.filter_by(title=show).first()
     pass
 
+
 @home_blueprint.route('/add', methods=['GET','POST'])
 @login_required
 def add():
@@ -163,8 +164,8 @@ def set_tvmaze_id():
         test = db.session.query(Show).filter(Show.title == show.title).first()
         print("Show title: " + show.title)
         print(test)
-        #db.session.add(show)
-        #db.session.commit()
+        db.session.add(show)
+        db.session.commit()
         return redirect(url_for('home.home'))
     return render_template('set_tvmaze_id.html', form=form)
 

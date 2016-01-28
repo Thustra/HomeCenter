@@ -80,3 +80,29 @@ class User(db.Model):
 
     def get_id(self):
         return self.id
+
+class Expense_category(db.Model):
+    __tablename__ = "category"
+
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    name = db.Column(db.String, nullable=False)
+    outgoing = db.Column(db.Boolean, nullable=False)
+    expenses = relationship("Expense", backref="expense")
+
+    def __init__(self, name, outgoing):
+        self.name = name
+        self.outgoing = outgoing
+
+class Expense(db.Model):
+
+    __tablename__ = "expenses"
+
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    amount = db.Column(db.Float, nullable=False)
+    date = db.Column(db.Date, nullable=False)
+    category_id = db.Column(db.Integer, ForeignKey("category.id"))
+
+    def __init__(self, amount, date):
+        self.amount = amount
+        self.date = date
+

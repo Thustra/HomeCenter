@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h3>Budget - Add Expense</h3>
+<br>
+<form class="form-signin" role="form" method="post" action="">
+    {{ form.csrf_token }}
+    {{ form.amount(placeholder="amount") }}
+    {{ form.date }}
+    {{ form.category }}
+
+  <button class="btn btn-sm btn-success" type="submit">Add!</button>
+</form>
+
+{% endblock %}
