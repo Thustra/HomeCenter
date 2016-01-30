@@ -7,7 +7,7 @@
 <form class="form-signin" role="form" method="post" action="">
   {{ form.csrf_token }}
   <p>
-    {{ form.amount(placeholder="title") }}
+    {{ form.title(placeholder="title") }}
     <span class="error">
       {% if form.title.errors %}
         {% for error in form.title.errors %}
