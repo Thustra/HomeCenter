@@ -145,7 +145,7 @@ class HomeViewsTests(BaseTestCase):
                 follow_redirects=True
             )
         self.assertEqual(response.status_code,200)
-        self.assertIn(b'Successfully added!',response.data)
+        self.assertIn(b'Friends',response.data)
 
 if __name__ == '__main__':
     unittest.main()
